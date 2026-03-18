@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CrowdEye Backend Diagram</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, Arial, sans-serif;
+      background: radial-gradient(circle at top, #152238 0%, #0b1220 45%, #050814 100%);
+      color: #eaf2ff;
+    }
+    .container {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 28px;
+    }
+    .hero {
+      text-align: center;
+      margin-bottom: 24px;
+      padding: 24px;
+      border: 1px solid rgba(124, 211, 255, 0.2);
+      border-radius: 24px;
+      background: rgba(255,255,255,0.04);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.35);
+    }
+    .hero h1 {
+      margin: 0;
+      font-size: 2.2rem;
+      letter-spacing: 0.5px;
+    }
+    .hero p {
+      margin: 12px auto 0;
+      max-width: 1000px;
+      color: #bcd0f7;
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+    .diagram {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+    .column {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    .card {
+      position: relative;
+      border-radius: 24px;
+      padding: 18px 18px 16px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.04));
+      border: 1px solid rgba(255,255,255,0.14);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.28);
+      backdrop-filter: blur(10px);
+    }
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 24px;
+      padding: 1px;
+      background: linear-gradient(135deg, rgba(89, 217, 255, 0.5), rgba(149, 102, 255, 0.35));
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+    }
+    .card h2, .card h3 {
+      margin: 0 0 10px;
+      line-height: 1.25;
+    }
+    .card h2 { font-size: 1.2rem; }
+    .card h3 { font-size: 1rem; color: #9ed8ff; }
+    .sub {
+      color: #b7c8e8;
+      line-height: 1.55;
+      font-size: 0.95rem;
+    }
+    .api-list {
+      display: grid;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .api {
+      padding: 9px 11px;
+      border-radius: 14px;
+      background: rgba(10, 20, 38, 0.72);
+      border: 1px solid rgba(120, 177, 255, 0.16);
+      font-size: 0.9rem;
+      line-height: 1.45;
+    }
+    .method {
+      display: inline-block;
+      min-width: 44px;
+      font-weight: 700;
+      margin-right: 8px;
+      color: #7ee1ff;
+    }
+    .center-stack {
+      display: grid;
+      gap: 18px;
+    }
+    .mini-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .badge {
+      padding: 7px 10px;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      background: rgba(123, 184, 255, 0.12);
+      border: 1px solid rgba(123, 184, 255, 0.2);
+      color: #dcecff;
+    }
+    .flow {
+      text-align: center;
+      padding: 14px;
+      border-radius: 20px;
+      background: linear-gradient(180deg, rgba(78, 180, 255, 0.14), rgba(120, 92, 255, 0.12));
+      border: 1px dashed rgba(148, 191, 255, 0.3);
+      color: #d8ebff;
+      font-weight: 600;
+    }
+    .footer {
+      margin-top: 22px;
+      padding: 18px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: #b9caea;
+      line-height: 1.6;
+    }
+    .arrow {
+      text-align: center;
+      font-size: 1.8rem;
+      color: #7dcfff;
+      opacity: 0.9;
+      margin: -6px 0;
+    }
+    @media (max-width: 1200px) {
+      .diagram { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 760px) {
+      .mini-grid { grid-template-columns: 1fr; }
+      .hero h1 { font-size: 1.7rem; }
+      .container { padding: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <section class="hero">
+      <h1>CrowdEye Backend Architecture & API Ecosystem</h1>
+      <p>
+        This visual summarizes the CrowdEye backend as the central integration layer connecting the mobile application,
+        web dashboard, owner operations, and the IoT console. The backend coordinates authentication, fleet operations,
+        live tracking, alerts, analytics, device communication, and data persistence through secure REST APIs.
+      </p>
+    </section>
+
+    <section class="diagram">
+      <div class="column">
+        <div class="card">
+          <h2>Client Systems</h2>
+          <p class="sub">
+            Frontend layers that consume the backend APIs and present real-time transport intelligence to passengers,
+            bus owners, operators, and administrators.
+          </p>
+          <div class="badge-row">
+            <span class="badge">Mobile App</span>
+            <span class="badge">Owner Dashboard</span>
+            <span class="badge">Admin Portal</span>
+            <span class="badge">Government View</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Passenger / Mobile APIs</h3>
+          <div class="api-list">
+            <div class="api"><span class="method">POST</span>/api/auth/login</div>
+            <div class="api"><span class="method">GET</span>/api/buses/live</div>
+            <div class="api"><span class="method">GET</span>/api/routes</div>
+            <div class="api"><span class="method">GET</span>/api/locations/live</div>
+            <div class="api"><span class="method">GET</span>/api/alerts/active</div>
+            <div class="api"><span class="method">GET</span>/api/trips/{id}</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Owner Dashboard APIs</h3>
+          <div class="api-list">
+            <div class="api"><span class="method">GET</span>/api/owner/overview</div>
+            <div class="api"><span class="method">GET</span>/api/owner/buses</div>
+            <div class="api"><span class="method">GET</span>/api/owner/drivers</div>
+            <div class="api"><span class="method">GET</span>/api/owner/drivers/performance</div>
+            <div class="api"><span class="method">GET</span>/api/owner/revenue</div>
+            <div class="api"><span class="method">GET</span>/api/owner/maintenance-predictions</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="center-stack">
+        <div class="card">
+          <h2>Spring Boot Backend Core</h2>
+          <p class="sub">
+            The backend acts as the orchestration hub of CrowdEye, enforcing business logic, validating requests,
+            processing incoming bus data, and distributing trusted information to all connected systems.
+          </p>
+          <div class="mini-grid">
+            <div class="card" style="padding:14px; border-radius:18px;">
+              <h3>API Layer</h3>
+              <p class="sub">REST controllers expose secure endpoints for apps, dashboards, and devices.</p>
+            </div>
+            <div class="card" style="padding:14px; border-radius:18px;">
+              <h3>Service Layer</h3>
+              <p class="sub">Handles analytics, alerting, occupancy logic, and operational workflows.</p>
+            </div>
+            <div class="card" style="padding:14px; border-radius:18px;">
+              <h3>Repository Layer</h3>
+              <p class="sub">Persists fleet, device, trip, and alert data to the relational database.</p>
+            </div>
+            <div class="card" style="padding:14px; border-radius:18px;">
+              <h3>Security Layer</h3>
+              <p class="sub">JWT authentication, role-based authorization, and access control policies.</p>
+            </div>
+          </div>
+          <div class="badge-row">
+            <span class="badge">Spring Boot</span>
+            <span class="badge">REST APIs</span>
+            <span class="badge">JWT Security</span>
+            <span class="badge">MySQL</span>
+            <span class="badge">Cloud Deployable</span>
+          </div>
+        </div>
+
+        <div class="flow">Mobile App / Dashboard / IoT Console ⇄ CrowdEye Backend ⇄ Database & Analytics</div>
+
+        <div class="card">
+          <h3>Core Backend APIs</h3>
+          <div class="api-list">
+            <div class="api"><span class="method">POST</span>/api/auth/login</div>
+            <div class="api"><span class="method">POST</span>/api/auth/register</div>
+            <div class="api"><span class="method">GET</span>/api/users/profile</div>
+            <div class="api"><span class="method">GET</span>/api/buses</div>
+            <div class="api"><span class="method">POST</span>/api/buses</div>
+            <div class="api"><span class="method">GET</span>/api/drivers</div>
+            <div class="api"><span class="method">GET</span>/api/trips</div>
+            <div class="api"><span class="method">GET</span>/api/analytics/occupancy</div>
+            <div class="api"><span class="method">GET</span>/api/analytics/fraud</div>
+            <div class="api"><span class="method">GET</span>/api/reports/summary</div>
+          </div>
+        </div>
+
+        <div class="arrow">↓</div>
+
+        <div class="card">
+          <h3>Data & Infrastructure</h3>
+          <div class="api-list">
+            <div class="api"><strong>Database:</strong> MySQL for users, buses, trips, alerts, logs, and analytics snapshots.</div>
+            <div class="api"><strong>Hosting:</strong> AWS EC2 / GCP VM deployment for scalable backend execution.</div>
+            <div class="api"><strong>Docs:</strong> Swagger / OpenAPI for endpoint testing and integration.</div>
+            <div class="api"><strong>Monitoring:</strong> Device logs, alert logs, system logs, and health checks.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="column">
+        <div class="card">
+          <h2>IoT Console Integration</h2>
+          <p class="sub">
+            The onboard IoT console collects sensor and camera data inside buses, performs edge processing,
+            and sends only meaningful operational events and measurements to the backend.
+          </p>
+          <div class="badge-row">
+            <span class="badge">Edge AI</span>
+            <span class="badge">Sensors</span>
+            <span class="badge">Camera Stream</span>
+            <span class="badge">Live Uploads</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>IoT Console APIs</h3>
+          <div class="api-list">
+            <div class="api"><span class="method">POST</span>/api/devices/register</div>
+            <div class="api"><span class="method">GET</span>/api/devices</div>
+            <div class="api"><span class="method">POST</span>/api/device-logs</div>
+            <div class="api"><span class="method">GET</span>/api/device-logs</div>
+            <div class="api"><span class="method">POST</span>/api/locations/update</div>
+            <div class="api"><span class="method">POST</span>/api/alerts</div>
+            <div class="api"><span class="method">POST</span>/api/occupancy/update</div>
+            <div class="api"><span class="method">GET</span>/api/system/health</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Operational Outcomes</h3>
+          <div class="api-list">
+            <div class="api">Live bus monitoring and occupancy visibility</div>
+            <div class="api">Fraud and anomaly reporting support</div>
+            <div class="api">Owner decision support through analytics</div>
+            <div class="api">Real-time alert propagation to dashboards</div>
+            <div class="api">Centralized historical logs for reporting</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="footer">
+      This HTML diagram is designed to be used directly in your report screenshots, GitHub README, or project documentation.
+      You can further customize it by replacing endpoint names with the exact APIs implemented in your backend, adding your
+      official CrowdEye color palette, or exporting it as an image or PDF.
+    </section>
+  </div>
+</body>
+</html>
